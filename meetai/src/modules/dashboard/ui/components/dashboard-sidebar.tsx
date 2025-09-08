@@ -24,7 +24,7 @@ const firstSection = [
     {
         icon: BotIcon,
         label: "Agents",
-        href: "/Agents",
+        href: "/agents",
     }
 ];
 
@@ -32,7 +32,7 @@ const secondSection = [
     {
         icon: StarIcon,
         label: "Upgrade",
-        href: "/Upgrade",
+        href: "/upgrade",
     },
 ]
 
