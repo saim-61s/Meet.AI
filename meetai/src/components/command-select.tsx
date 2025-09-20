@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { CommandResponsiveDialog } from "./ui/command";
-import { CommandEmpty, CommandInput, CommandItem, CommandList } from "cmdk";
+import { CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 
 interface Props {
     options: Array<{
