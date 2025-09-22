@@ -1,47 +1,45 @@
 import { auth } from "@/lib/auth";
-import { loadSearchParams } from "@/modules/agents/params";
-import { MeetingsListHeader } from "@/modules/meetings/ui/components/meetings-list-header";
-import { MeetingsView, MeetingsViewError, MeetingsViewLoading } from "@/modules/meetings/ui/views/meetings-view";
+import { MeetingIdView, MeetingIdViewError, MeetingIdViewLoading } from "@/modules/meetings/ui/views/meeting-id-vew";
 import { getQueryClient, trpc } from "@/trpc/server";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import type { SearchParams } from "nuqs";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 interface Props {
-    searchParams: Promise<SearchParams>
+    params: Promise<{
+        meetingId: string;
+    }>;
 }
 
-const Page = async ({ searchParams } : Props) => {
-    const filters = await loadSearchParams(searchParams);
+const Page = async ({ params }: Props) => {
+    const { meetingId } = await params;
+
     const session = await auth.api.getSession({
         headers: await headers(),
-      });
-    
-      if(!session) {
+    });
+
+    if(!session) {
         redirect("/sign-in");
-      }
+    }
 
     const queryClient = getQueryClient();
-    void queryClient.prefetchQuery(trpc.meetings.getMany.queryOptions({
-        ...filters,
-    }));
-
-
-    return (
-        <>
-        <MeetingsListHeader />
-        <HydrationBoundary state={dehydrate(queryClient)} >
-            <Suspense fallback={<MeetingsViewLoading />} >
-                <ErrorBoundary fallback={<MeetingsViewError />}>
-                    <MeetingsView />
-                </ErrorBoundary>
-            </Suspense>
-        </HydrationBoundary>
-        </>
+    void queryClient.prefetchQuery(
+        trpc.meetings.getOne.queryOptions({ id: meetingId })
     )
+    return ( 
+        <div>
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                <Suspense fallback={<MeetingIdViewLoading />}>
+                    <ErrorBoundary fallback={<MeetingIdViewError />}>
+                        <MeetingIdView meetingId={meetingId} />
+                    </ErrorBoundary>
+                </Suspense>
+            </HydrationBoundary>
+        </div>
+     );
 }
-
+ 
 export default Page;
