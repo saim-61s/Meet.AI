@@ -20,5 +20,7 @@ const Layout = ({ children }: Props) => {
         </SidebarProvider>
      );
 }
- 
+
 export default Layout;
+ 
+
