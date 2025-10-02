@@ -4,6 +4,10 @@ import { db } from "@/db";
 import * as schema from "@/db/schema";
 
 export const auth = betterAuth({
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://unransomed-digressional-chandra.ngrok-free.dev", // add your ngrok URL here
+  ],
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIET_ID as string,
